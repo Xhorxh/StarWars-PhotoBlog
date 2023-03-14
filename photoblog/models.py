@@ -19,3 +19,25 @@ class PostImage(models.Model):
 
     def __str__(self):
         return self.post.title
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    name = models.CharField(max_length=50)
+    email = models.EmailField()
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"Comment by {self.name} on {self.post.title}"
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+
+    def edit(self, new_content):
+        self.content = new_content
+        self.save()
