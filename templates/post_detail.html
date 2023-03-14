@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="album py-5 bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1>{{ post.title }}</h1>
+          <hr>
+          <p>{{ post.content }}</p>
+          {% if post.post_images.all %}
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+              {% for post_image in post.post_images.all %}
+                <div class="col">
+                  <div class="card shadow-sm">
+                    <img src="{{ post_image.image.url }}" class="card-img-top" alt="{{ post.title }} image">
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
