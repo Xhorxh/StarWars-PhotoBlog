@@ -1,0 +1,19 @@
+/* Social media icons hover */
+
+.fa-facebook-f:hover {
+    color: rgb(11, 74, 199);
+}
+.fa-twitter:hover {
+    color: rgb(29, 161, 242);
+}
+.fa-youtube:hover {
+    color: rgb(255, 0, 0) ;
+}
+.fa-instagram:hover {
+    color: rgb(193, 53, 132) ;
+}
+
+/*Background image */
+.bg-image{
+    background-image: url('https://images.pexels.com/photos/3607542/pexels-photo-3607542.jpeg?auto=compress&cs=tinysrgb&w=600');
+}  
