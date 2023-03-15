@@ -1,5 +1,6 @@
 from django.views.generic import ListView, DetailView
 from .models import Post
+from .forms import CommentForm
 
 
 class PostListView(ListView):
@@ -18,4 +19,5 @@ class PostDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['comments'] = self.object.comments.all().order_by('-created_at')
+        context['comment_form'] = CommentForm()
         return context
