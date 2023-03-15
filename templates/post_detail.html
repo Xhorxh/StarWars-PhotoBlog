@@ -31,7 +31,7 @@
             <div class="card-body">
               {% for comment in comments %}
                 <div class="comments" style="padding: 10px;">
-                  <p class="font-weight-bold">{{ comment.name }}<span class="text-muted font-weight-normal"> {{ comment.created_at }}</span> wrote:</p>
+                  <p class="font-weight-bold">{{ user.username }}<span class="text-muted font-weight-normal"> {{ comment.created_at }}</span> wrote:</p>
                   {{ comment.content | linebreaks }}
                 </div>
               {% empty %}
@@ -47,7 +47,7 @@
                 <form method="post" style="margin-top: 1.3em;">
                   {% csrf_token %}
                   {{ comment_form.as_p }}
-                  <button type="submit" class="btn btn-signup btn-lg">Submit</button>
+                  <button type="submit" class="btn btn-success">Submit</button>
                 </form>
               {% else %}
                 <p>Please <a href="{% url 'account_login' %}">login</a> to leave a comment.</p>

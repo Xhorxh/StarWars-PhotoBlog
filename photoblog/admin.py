@@ -11,9 +11,10 @@ class PostAdmin(admin.ModelAdmin):
     inlines = [PostImageInline]
 
 
+@admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'created_at')
+    list_display = ('name', 'content', 'post', 'created_at')
+    search_fields = ('name', 'email', 'content')
 
 
-admin.site.register(Comment, CommentAdmin)
 admin.site.register(PostImage)
