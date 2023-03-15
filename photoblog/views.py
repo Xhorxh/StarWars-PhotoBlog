@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
 from .models import Post, Comment
 from .forms import CommentForm
@@ -24,15 +25,14 @@ class PostDetailView(DetailView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        context = self.get_context_data(object=self.object)
-
-        comment_form = CommentForm(request.POST)
-        if comment_form.is_valid():
-            comment = comment_form.save(commit=False)
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
             comment.post = self.object
-            comment.author = request.user
+            comment.name = request.user.username
             comment.save()
+            return redirect('post_detail', pk=self.object.pk)
+        else:
+            context = self.get_context_data(**kwargs)
+            context['comment_form'] = form
             return self.render_to_response(context)
-
-        context['comment_form'] = comment_form
-        return self.render_to_response(context)

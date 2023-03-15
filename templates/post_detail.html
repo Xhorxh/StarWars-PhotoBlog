@@ -31,7 +31,7 @@
             <div class="card-body">
               {% for comment in comments %}
                 <div class="comments" style="padding: 10px;">
-                  <p class="font-weight-bold">{{ user.username }}<span class="text-muted font-weight-normal"> {{ comment.created_at }}</span> wrote:</p>
+                  <p class="font-weight-bold">{{ comment.name }}<span class="text-muted font-weight-normal"> {{ comment.created_at }}</span> wrote:</p>
                   {{ comment.content | linebreaks }}
                 </div>
               {% empty %}
