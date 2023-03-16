@@ -1,4 +1,6 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
+from django.http import HttpResponsePermanentRedirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, DetailView
 from django.contrib import messages
 from .models import Post, Comment
@@ -22,13 +24,14 @@ class PostDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         comments = self.object.comments.all().order_by('-created_at')
         context['comments'] = comments
-        context['comment_form'] = CommentForm()
+        context['comment_form'] = CommentForm(initial={'comment': ''})
         context['user_comments'] = comments.filter(name=self.request.user)
+        context['edit_comment_id'] = self.request.GET.get('edit_comment_id')
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form = CommentForm(request.POST)
+        form = CommentForm(request.POST, initial={'comment': ''})
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = self.object
@@ -57,13 +60,22 @@ def delete_comment(request, comment_id):
 
 def edit_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id, name=request.user)
-    form = CommentForm(request.POST or None, instance=comment)
+    form = CommentForm(request.POST or None, initial={'content': comment.content})
     if request.method == 'POST':
-        form = CommentForm(request.POST, instance=comment)
+        form = CommentForm(request.POST, initial={'content': comment.content})
         if form.is_valid():
-            form.save()
+            comment.content = form.cleaned_data['content']
+            comment.save()
             messages.success(request, 'Comment edited successfully!')
             return redirect('post_detail', pk=comment.post.pk)
         else:
             messages.error(request, 'Error editing comment.')
-    return redirect('post_detail', pk=comment.post.pk)
+    else:
+        form = CommentForm(initial={'content': comment.content})
+
+    context = {
+        'comment': comment,
+        'form': form
+    }
+    return render(request, 'edit_comment.html', context)
+
