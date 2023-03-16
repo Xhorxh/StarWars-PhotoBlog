@@ -1,6 +1,7 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} 
 
-{% load crispy_forms_tags %}
+{% block content %}
+  {% load crispy_forms_tags %}
 
   <div class="album py-5 bg-light">
     <div class="container">
@@ -22,38 +23,52 @@
           {% endif %}
           <div class="row">
             <div class="col">
-                <hr>
-            </div>
-        </div>
-        <div class="row">
-          <div class="col-md-8 card mb-4 mt-3">
-            <h3>Comments:</h3>
-            <div class="card-body">
-              {% for comment in comments %}
-                <div class="comments" style="padding: 10px;">
-                  <p class="font-weight-bold">{{ comment.name }}<span class="text-muted font-weight-normal"> {{ comment.created_at }}</span> wrote:</p>
-                  {{ comment.content | linebreaks }}
-                </div>
-              {% empty %}
-                <p>No comments yet.</p>
-              {% endfor %}
+              <hr>
             </div>
           </div>
-          <div class="col-md-4 card mb-4 mt-3">
-            <div class="card-body">
-              {% if user.is_authenticated %}
-                <h3>Leave a comment:</h3>
-                <p>Posting as: {{ user.username }}</p>
-                <form method="post" style="margin-top: 1.3em;">
-                  {% csrf_token %}
-                  {{ comment_form.as_p }}
-                  <button type="submit" class="btn btn-success">Submit</button>
-                </form>
-              {% else %}
-                <p>Please <a href="{% url 'account_login' %}">login</a> to leave a comment.</p>
-              {% endif %}
+          <div class="row">
+            <div class="col-md-8 card mb-4 mt-3">
+              <h3>Comments:</h3>
+              <div class="card-body">
+                {% for comment in comments %}
+                  <div class="comments" style="padding: 10px;">
+                    <p class="font-weight-bold">{{ comment.name }}<span class="text-muted font-weight-normal"> {{ comment.created_at|date:"F j, Y, g:i a" }}</span> wrote:</p>
+                    {{ comment.content | linebreaks }}
+                    {% if user_comments %}
+                      {% for user_comment in user_comments %}
+                        {% if user_comment.id == comment.id %}
+                              <a href="{% url 'edit_comment' comment_id=comment.id %}" class="btn btn-outline-primary btn-sm">Edit</a>
+                              <form action="{% url 'delete_comment' comment_id=comment.id %}" method="POST" class="d-inline ">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                              </form>
+                        {% endif %}
+                      {% endfor %}
+                    {% endif %}
+                  </div>
+                {% empty %}
+                  <p>No comments yet.</p>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="col-md-4 card mb-4 mt-3">
+              <div class="card-body">
+                {% if user.is_authenticated %}
+                  <h3>Leave a comment:</h3>
+                  <p>Posting as: {{ user.username }}</p>
+                  <form method="post" style="margin-top: 1.3em;">
+                    {% csrf_token %}
+                    {{ comment_form.as_p }}
+                    <button type="submit" class="btn btn-success">Submit</button>
+                  </form>
+                {% else %}
+                  <p>Please <a href="{% url 'account_login' %}">login</a> to leave a comment.</p>
+                {% endif %}
+              </div>
             </div>
           </div>
         </div>
-        
+      </div>
+    </div>
+  </div>
 {% endblock %}

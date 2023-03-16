@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
+from django.contrib import messages
 from .models import Post, Comment
 from .forms import CommentForm
 
@@ -19,8 +20,10 @@ class PostDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['comments'] = self.object.comments.all().order_by('-created_at')
+        comments = self.object.comments.all().order_by('-created_at')
+        context['comments'] = comments
         context['comment_form'] = CommentForm()
+        context['user_comments'] = comments.filter(name=self.request.user)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -29,10 +32,38 @@ class PostDetailView(DetailView):
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = self.object
-            comment.name = request.user.username
+            comment.name = request.user
             comment.save()
+            messages.success(request, 'Comment added successfully!')
             return redirect('post_detail', pk=self.object.pk)
         else:
             context = self.get_context_data(**kwargs)
             context['comment_form'] = form
+            messages.error(request, 'Error adding comment.')
             return self.render_to_response(context)
+
+
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id, name=request.user)
+    if request.method == 'POST':
+        comment.delete()
+        messages.success(request, 'Comment deleted successfully!')
+        return redirect('post_detail', pk=comment.post.pk)
+    else:
+        messages.warning(request, 'Are you sure you want to delete this comment?')
+        context = {'comment': comment}
+        return redirect('post_detail', pk=comment.post.pk)
+
+
+def edit_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id, name=request.user)
+    form = CommentForm(request.POST or None, instance=comment)
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Comment edited successfully!')
+            return redirect('post_detail', pk=comment.post.pk)
+        else:
+            messages.error(request, 'Error editing comment.')
+    return redirect('post_detail', pk=comment.post.pk)

@@ -36,9 +36,5 @@ class Comment(models.Model):
     def __str__(self):
         return f"Comment by {self.name} on {self.post.title}"
 
-    def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
-
-    def edit(self, new_content):
-        self.content = new_content
-        self.save()
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[str(self.post.id)])
