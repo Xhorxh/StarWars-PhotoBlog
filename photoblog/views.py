@@ -79,3 +79,14 @@ def edit_comment(request, comment_id):
     }
     return render(request, 'edit_comment.html', context)
 
+
+def like_post(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    user = request.user
+    if user in post.likes.all():
+        post.likes.remove(request.user)
+        messages.warning(request, 'You unliked this post!')
+    else:
+        post.likes.add(user)
+        messages.success(request, 'Post liked successfully!')
+    return redirect('post_detail', pk=post_id)

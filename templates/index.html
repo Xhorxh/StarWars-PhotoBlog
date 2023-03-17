@@ -1,5 +1,3 @@
-
-
 {% extends "base.html" %}
 
 {% block content %}
@@ -8,13 +6,13 @@
     <div class="bg-image text-center shadow-1-strong rounded mt-1 mb-3 text-white">
         <h1 class="mb-3">StarWars</h1>
         <p class="mx-3">
-            Hi there! My name is George, and I'm a passionate Star Wars fan and figure artist. 
-            I've been creating custom Star Wars figures for 5 years, and I absolutely love 
-            bringing the characters from this amazing universe to life.For me, the art of creating 
-            Star Wars figures is all about attention to detail. From the clothing and accessories to 
-            the intricate facial features, I strive to make each figure as accurate and lifelike as 
-            possible. I spend countless hours studying reference materials, such as concept art and 
-            movie stills, to ensure that every aspect of the figure is just right. Take a look below 
+            Hi there! My name is George, and I'm a passionate Star Wars fan and figure artist.
+            I've been creating custom Star Wars figures for 5 years, and I absolutely love
+            bringing the characters from this amazing universe to life.For me, the art of creating
+            Star Wars figures is all about attention to detail. From the clothing and accessories to
+            the intricate facial features, I strive to make each figure as accurate and lifelike as
+            possible. I spend countless hours studying reference materials, such as concept art and
+            movie stills, to ensure that every aspect of the figure is just right. Take a look below
             what I've created so far... :)))
         </p>
     </div>
@@ -33,7 +31,7 @@
                                     <div class="image-container">
                                         {% if "placeholder" in post.cover_image.url %}
                                         <img class="card-img-top"
-                                            src="https://images.pexels.com/photos/4439444/pexels-photo-4439444.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1">
+                                            src="https://img.freepik.com/free-photo/coming-soon-word-metallic-text-style_53876-124845.jpg?w=740&t=st=1679042055~exp=1679042655~hmac=cde554b2589e941be8ec1fc7c77e43d4bf636fdcb0df65b42a41d4d61d253749">
                                         {% else %}
 
                                         <img class="card-img-top" src="{{ post.cover_image.url }}"
@@ -47,8 +45,8 @@
                                     <p class="card-text">{{ post.excerpt }}</p>
                                 </a>
                                 <hr />
-                                <p class="card-text text-muted h6">{{ post.created_on}} <i class="far fa-heart"></i>
-                                    {{ post.number_of_likes }}</p>
+                                <p class="card-text text-muted h6">{{ post.created_at}} <i class="far fa-heart"></i>
+                                    <span class="text-secondary">{{ post.number_of_likes }} </span></p>
                             </div>
                         </div>
                     </div>

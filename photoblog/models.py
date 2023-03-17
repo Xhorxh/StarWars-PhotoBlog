@@ -9,6 +9,10 @@ class Post(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     cover_image = CloudinaryField('image', default='placeholder')
+    likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
+
+    def number_of_likes(self):
+        return self.likes.count()
 
     def __str__(self):
         return self.title
